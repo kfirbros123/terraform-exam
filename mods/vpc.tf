@@ -7,18 +7,28 @@ resource "aws_vpc" "this" {
     Name = "terraform-vpc"
   }
 }
+output "vpc_id"{
+  value = aws_vpc.this.id
+}
 
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
 
 resource "aws_subnet" "public" {
   count = var.SUBNET_COUNT
   cidr_block              =cidrsubnet(var.VPC_CIDR_RANGE, 8, count.index)
   vpc_id                  = aws_vpc.this.id
   map_public_ip_on_launch = true
-
+  availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
     Name = "public-subnet-${count.index}"
   }
+}
+
+output "public_subnet_id"{
+  value = aws_subnet.public[*].id
 }
 
 resource "aws_subnet" "private" {

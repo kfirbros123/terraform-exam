@@ -7,6 +7,7 @@ variable "INSTANCE_TYPE"{      default = "t2.micro"}
 variable "IF_PUBLIC_IP"{ 
     default = true 
     }
+  
 
 variable "AMIS" {
   type = map(string)
