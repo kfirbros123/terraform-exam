@@ -9,6 +9,7 @@ terraform {
 
 variable "AWS_ACCESS_KEY" {}
 variable "AWS_SECRET_KEY" {}
+variable "AWS_SESSION_TOKEN" {}
 variable "AWS_REGION" { default = "us-east-1" }
 variable "APP_IMAGE" { default = "ami-0c398cb65a93047f2"} #ubuntu 22.04
 
