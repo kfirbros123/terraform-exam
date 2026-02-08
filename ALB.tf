@@ -44,6 +44,17 @@ resource "aws_launch_template" "app" {
   vpc_security_group_ids = [
     module.aws_infra.sg_id
   ]
+   user_data = base64encode(<<-EOF
+    #!/bin/bash
+    set -e
+
+    apt-get update -y
+    apt-get install -y nginx
+
+    systemctl start nginx
+    systemctl enable nginx
+  EOF
+  )
 }
 
 
@@ -70,7 +81,7 @@ resource "aws_autoscaling_group" "asg" {
 }
 
 
-output "alb_dns_name" {
+output "Loadblanacer_URL" {
   description = "DNS name of the Application Load Balancer"
   value       = aws_lb.alb.dns_name
 }
