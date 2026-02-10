@@ -2,8 +2,8 @@ resource "aws_lb" "alb" {
   name               = "exam-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [module.aws_infra.sg_id]   # use existing SG
-  subnets            = module.aws_infra.public_subnet_id      # your public subnet
+  security_groups    = [module.aws_infra.sg_id]          # use existing SG
+  subnets            = module.aws_infra.public_subnet_id # your public subnet
 }
 
 
@@ -44,7 +44,7 @@ resource "aws_launch_template" "app" {
   vpc_security_group_ids = [
     module.aws_infra.sg_id
   ]
-   user_data = base64encode(<<-EOF
+  user_data = base64encode(<<-EOF
     #!/bin/bash
     set -e
 
@@ -59,7 +59,7 @@ resource "aws_launch_template" "app" {
 
 
 resource "aws_autoscaling_group" "asg" {
-  name = "exam-asg"
+  name                = "exam-asg"
   desired_capacity    = 1
   max_size            = 3
   min_size            = 1
@@ -77,11 +77,15 @@ resource "aws_autoscaling_group" "asg" {
     value               = "exam-asg"
     propagate_at_launch = true
   }
- # depends_on = [module.aws_infra]
+  # depends_on = [module.aws_infra]
 }
 
 
 output "Loadblanacer_URL" {
-  description = "DNS name of the Application Load Balancer"
-  value       = aws_lb.alb.dns_name
+  value      = aws_lb.alb.dns_name
+  depends_on = [aws_lb.alb]
+}
+output "INFO" {
+  value      = "also installed nginx to make sure the loadbalancer works"
+  depends_on = [aws_lb.alb]
 }
